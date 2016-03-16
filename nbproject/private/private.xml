@@ -5,7 +5,9 @@
         <group>
             <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Server/ChatServer.java</file>
             <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Server/ConnectionManager.java</file>
-            <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Server/PublicConversation.java</file>
+            <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Client/MainPanel.java</file>
+            <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Client/ConnectionManager.java</file>
+            <file>file:/C:/Users/Saif%20Asad/Desktop/Final%20Year/Distributed/Assignments/DistributedChatSystem/src/Protocol/DisconectMessage.java</file>
         </group>
     </open-files>
 </project-private>

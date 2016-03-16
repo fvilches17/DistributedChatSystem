@@ -23,7 +23,7 @@ import javax.swing.Timer;
  * @author Saif Asad
  */
 public class ChatServer {
-    private static Hashtable<ConnectedClient, Socket> connectedClientsTable;
+    private static Hashtable<String, Socket> connectedClientsTable;
     private boolean stopRequested;
     public static final String HOST_NAME = "localhost";
     public static final int TCP_PORT = 8888;
@@ -79,7 +79,7 @@ public class ChatServer {
         System.out.println("Server finishing");
     }
     //--------------------------------------------------------------------------
-    public static Hashtable<ConnectedClient, Socket> getConnectedClientsTable() {
+    public static Hashtable<String, Socket> getConnectedClientsTable() {
         return connectedClientsTable;
     }
     //--------------------------------------------------------------------------
@@ -134,7 +134,7 @@ public class ChatServer {
             if (!connectedClientsTable.isEmpty()) {
                 getConnectedClientsTable().keySet().stream().forEach((client) -> {
                     try {
-                        dos.writeBytes(client.getClientName());
+                        dos.writeBytes(client);
                         dos.flush();
                         byte[] data = baos.toByteArray();
                         baos.reset();

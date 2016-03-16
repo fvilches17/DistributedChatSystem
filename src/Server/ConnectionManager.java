@@ -1,37 +1,35 @@
-
 package Server;
 
-import ProtocolMessages.Message;
-import java.io.BufferedReader;
+import Protocol.DisconnectMessage;
+import Protocol.LogInMessage;
+import Protocol.Message;
+import Protocol.PrivateMessage;
+import Protocol.PublicMessage;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * This class handles communication with a specific client
- * First it takes client's informations.
- * Second it handles all the messages from the client.
+ * This class handles communication with a specific client First it takes
+ * client's informations. Second it handles all the messages from the client.
+ *
  * @author Saif Asad
  */
 public class ConnectionManager implements Runnable {
 
+    private Message clientMessage;
     private Socket socket; // socket for client/server communication
-    private ConnectedClient connectedClient;
     private ObjectOutputStream outputStream;
     private ObjectInputStream inputStream;
-    
+
     //--------------------------------------------------------------------------
     //Constructor
-    ConnectionManager(Hashtable<ConnectedClient, Socket> connectedClientsTable, Socket socket) {
-        connectedClient = new ConnectedClient();
+    ConnectionManager(Hashtable<String, Socket> connectedClientsTable, Socket socket) {
         this.socket = socket;
-        
         //Setting up streams
         try {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -41,50 +39,59 @@ public class ConnectionManager implements Runnable {
             System.err.println(ex);
         }
     }
-    
     //--------------------------------------------------------------------------
-    public void forwardMessage(Message clientMessage){
-        //clientMessage.getUSER();
-        clientMessage.getRecipient();
-        //get the recipient
-        Socket recipientSocket = connectedClientsTable.get();
-        outputStream = new ObjectOutputStream(recipientSocket.getOutputStream());
-        //send the message to the recipient
-        outputStream.writeObject(clientMessage);
-        
-    }
-    //--------------------------------------------------------------------------
-    public void broadCastMessage(Message clientMessage){
-        //get a list of client
-        //get the socket from the table
-        Socket targetClientSocket = ;
+    public void forwardMessage(Message clientMessage) throws IOException {
+        //get the recipient's socket
+        PrivateMessage message = (PrivateMessage)clientMessage;
+        String recipient = message.getRECIPIENT();
+        Socket targetClientSocket = ChatServer.getConnectedClientsTable().get(recipient);
         outputStream = new ObjectOutputStream(targetClientSocket.getOutputStream());
-        chatServer.getListOfConnectedClients();
+        //send the message to the target recipient
         outputStream.writeObject(clientMessage);
+    }
+
+    //--------------------------------------------------------------------------
+    public void broadCastMessage(Message clientMessage) throws IOException {
+        if (!ChatServer.getConnectedClientsTable().isEmpty()) {
+            for(String client : ChatServer.getConnectedClientsTable().keySet()){
+                Socket targetClientSocket = ChatServer.getConnectedClientsTable().get(client);
+                outputStream = new ObjectOutputStream(targetClientSocket.getOutputStream());
+                outputStream.writeObject(clientMessage);
+            }
+        }
     }
     //--------------------------------------------------------------------------
     @Override
     public void run() {
+        boolean clientDisconnected = false;
         try {
-            String clientRequest;
-            do {  
-                clientRequest = br.readLine(); // blocking
-                //System.out.println("Received line: " + clientRequest);   
-                
-                if(clientMessage instanceOf(IDCheckMessage)){
-                    if(){
-                        
-                    } else {
-                        
+            try {
+                clientMessage = (Message) inputStream.readObject();
+                do {
+                    String client = clientMessage.getUSER().getID();
+                    if (!client.isEmpty()) {
+                        if (clientMessage instanceof LogInMessage) {
+                            if (ChatServer.getConnectedClientsTable().containsKey(client)) {
+                                outputStream.writeObject(new Boolean(false));
+                            } else {
+                                ChatServer.getConnectedClientsTable().put(client, socket);
+                                outputStream.writeObject(new Boolean(true));
+                            }
+                        } else if (clientMessage instanceof PrivateMessage) {
+                            forwardMessage(clientMessage);
+                        } else if (clientMessage instanceof PublicMessage) {
+                            broadCastMessage(clientMessage);
+                        } else if (clientMessage instanceof DisconnectMessage) {
+                            if (ChatServer.getConnectedClientsTable().contains(client)) {
+                                ChatServer.getConnectedClientsTable().remove(client);
+                            }
+                            clientDisconnected = true;
+                        }
                     }
-                } else if(clientMessage instanceOf(PrivateMessage)){
-                    forwardMessage(clientMessage);
-                } else if(clientMessage instanceOf(PublicMessage)){
-                
-                } else if(clientMessage instanceOf(DisconnectMessage)){
-                
-                }
-            } while();   
+                } while (!clientDisconnected);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (IOException e) {
             System.err.println("Server error: " + e);
         }
