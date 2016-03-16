@@ -1,7 +1,8 @@
 package Server;
 
-import Protocol.DisconnectMessage;
+
 import Protocol.LogInMessage;
+import Protocol.LogOutMessage;
 import Protocol.Message;
 import Protocol.PrivateMessage;
 import Protocol.PublicMessage;
@@ -81,7 +82,7 @@ public class ConnectionManager implements Runnable {
                             forwardMessage(clientMessage);
                         } else if (clientMessage instanceof PublicMessage) {
                             broadCastMessage(clientMessage);
-                        } else if (clientMessage instanceof DisconnectMessage) {
+                        } else if (clientMessage instanceof LogOutMessage) {
                             if (ChatServer.getConnectedClientsTable().contains(client)) {
                                 ChatServer.getConnectedClientsTable().remove(client);
                             }
