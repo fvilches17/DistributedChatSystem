@@ -62,6 +62,10 @@ public class MainPanel extends JPanel {
         return TEXT_AREA_PANEL;
     }
     
+    /**
+     * for debugging purposes only
+     * @param args 
+     */
     public static void main(String[] args) {
         ConnectionManager cm = new ConnectionManager();
         

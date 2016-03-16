@@ -3,24 +3,21 @@
 package Client;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Represents the currently logged in user
+ * @author Francisco
+ */
 public class User implements Serializable {
     private final String ID;
-    private final InetAddress IP_ADDRESS;
     
-    public User(String ID) throws UnknownHostException {
+    public User(String ID) {
         this.ID = ID;
-        IP_ADDRESS = InetAddress.getLocalHost();
     }
 
     public String getID() {
         return ID;
-    }
-
-    public InetAddress getIP_ADDRESS() {
-        return IP_ADDRESS;
     }
     
     /**
@@ -29,7 +26,7 @@ public class User implements Serializable {
      */
     @Override
     public String toString() {
-        return "User{" + "ID=" + ID + ", IP_ADDRESS=" + IP_ADDRESS + '}';
+        return "User{" + "ID=" + ID + '}';
     }
     
     /**

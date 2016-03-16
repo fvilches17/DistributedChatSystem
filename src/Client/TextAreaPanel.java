@@ -7,26 +7,27 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.TextArea;
-import java.awt.image.ImageObserver;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
 
 public class TextAreaPanel extends JPanel {
     private final TextArea PUBLIC_TEXT_AREA = TextAreaPanel.generateTextArea();
     
+    //CONSTRUCTOR---------------------------------------------------------------
     public TextAreaPanel() {
         setLayout(new BorderLayout());
         add(PUBLIC_TEXT_AREA, BorderLayout.CENTER);
     }
     
+    //GETTERS-------------------------------------------------------------------
     public TextArea getPUBLIC_TEXT_AREA() {
         return PUBLIC_TEXT_AREA;
     }
     
+    //METHODS-------------------------------------------------------------------
     public void switchConversation(TextArea conversation) {
         if (this.getComponentCount() == 0) {
             add(conversation);

@@ -2,6 +2,7 @@
 
 package Client;
 
+import Protocol.LogOutMessage;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -15,6 +16,7 @@ import javax.swing.JScrollPane;
 
 public class GraphicalInterface extends JFrame {
     //FIELDS--------------------------------------------------------------------
+    //TODO add logos
     //private final URL LOGO_URL = Main.class.getResource("images/Logo.png");
     //private final Image LOGO = new ImageIcon(LOGO_URL).getImage();
     private final MainPanel MAIN_PANEL;
@@ -46,6 +48,7 @@ public class GraphicalInterface extends JFrame {
         
     }
     
+    //LISTENERS-----------------------------------------------------------------
     private class WindowCloseEvent implements WindowListener {
         
         private final User USER;
@@ -58,7 +61,7 @@ public class GraphicalInterface extends JFrame {
         
         @Override
         public void windowClosing(WindowEvent e) {
-            DisconectMessage logoutMessage = new DisconectMessage(USER, false);
+            LogOutMessage logoutMessage = new LogOutMessage(USER);
             try {
                 COMMS_MANAGER.sendMessage(logoutMessage);
             } catch (IOException ex) {

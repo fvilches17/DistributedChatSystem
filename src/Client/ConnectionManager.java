@@ -1,5 +1,7 @@
 package Client;
 
+import Protocol.LogInMessage;
+import Protocol.Message;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,7 +32,7 @@ public class ConnectionManager {
         } catch (IOException ex) {
             System.err.println("Unable to establish connection with " + HOST_NAME);
             System.err.println(ex);
-            JOptionPane.showMessageDialog(null, "Unable to establish connection",
+            JOptionPane.showMessageDialog(null, "Unable to establish connection with host",
                     "Connection Error", JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
@@ -40,8 +42,11 @@ public class ConnectionManager {
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
         } catch (IOException ex) {
-            System.err.println("Unable to set output/input stream with socket ");
+            System.err.println("Unable to set output/input stream with socket");
             System.err.println(ex);
+            JOptionPane.showMessageDialog(null, "Unable to set output/input stream with socket",
+                    "Connection Setup Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         }
     }
 
@@ -49,15 +54,11 @@ public class ConnectionManager {
         return transmitionLive;
     }
 
-    public ObjectOutputStream getOutputStream() {
-        return outputStream;
-    }
-
     public ObjectInputStream getInputStream() {
         return inputStream;
     }
     
-    public boolean checkUserIDAvailability(IDCheckMessage message) {
+    public boolean checkUserIDAvailability(LogInMessage message) {
         try {
             outputStream.writeObject(message);
         } catch (IOException ex) {
@@ -72,7 +73,12 @@ public class ConnectionManager {
             } catch (IOException ex) {
                 System.err.println("Could not read message object from server");
                 System.err.println(ex);
-            } catch (ClassNotFoundException ex) {} //Ignore, check again
+                //Try again
+            } catch (ClassNotFoundException ex) {
+                System.err.println("Wrong object received");
+                System.err.println(ex);
+                //Try again
+            } 
         }
     }
 

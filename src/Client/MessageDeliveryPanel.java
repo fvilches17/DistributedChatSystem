@@ -2,7 +2,6 @@
 
 package Client;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
@@ -12,7 +11,7 @@ import javax.swing.JTextField;
 
 public class MessageDeliveryPanel extends JPanel {
     private final JButton SEND_BUTTON = new JButton("Send");
-    private final JTextField TEXT_FIELD = new JTextField("Write your message here...");
+    private final JTextField TEXT_FIELD = new JTextField("Type your message here...");
     
     public MessageDeliveryPanel() {
         setLayout(new GridBagLayout());

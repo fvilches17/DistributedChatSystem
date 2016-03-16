@@ -1,42 +1,30 @@
 package Client;
 
-import java.net.UnknownHostException;
+import Protocol.LogInMessage;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+/**
+ * This is the starting point for the entire application
+ * @author Francisco Vilches | Saif Asad
+ */
 public class Main {
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            //Starting connection
+            
+            //Starting connection. If connection fails, message displays and system terminates
             ConnectionManager connectionManager = new ConnectionManager();
-            
-            /*
-            User user = null;
-            try {
-                user = new User("fvilches17");
-            } catch (UnknownHostException ex) {
-            }
-            */
-            
-            //TODO ignore for now
             
             //User logging in
             User user = null;
             boolean loggedIn = false;
             while (!loggedIn) {
-                //Getting user name
+                //Getting user (i.e. client) id 
                 String userID = JOptionPane.showInputDialog("Enter User ID");
-                try {
-                    user = new User("userID");
-                    loggedIn = connectionManager.checkUserIDAvailability(new IDCheckMessage(user));
-                    if (!loggedIn)
-                        JOptionPane.showInputDialog("User ID already exists, try another ID");
-                } catch (UnknownHostException ex) {
-                    JOptionPane.showMessageDialog(null, "Unknown host error",
-                            "Connection Error", JOptionPane.ERROR_MESSAGE);
-                    System.err.println(ex);
-                    System.exit(-1);
+                user = new User(userID);
+                loggedIn = connectionManager.checkUserIDAvailability(new LogInMessage(user));
+                if (!loggedIn) {
+                    JOptionPane.showInputDialog("User ID already exists, try another ID");
                 }
             }
             
@@ -46,12 +34,11 @@ public class Main {
             UsersPanel up = new UsersPanel();
             MainPanel mainPanel = new MainPanel(up, mdp, tap);
             
-            //Starting GUI
+            //Starting GUI. Loading main frame.
             GraphicalInterface gui = new GraphicalInterface(mainPanel, user, connectionManager);
             
             //Loading GUI controllers
             Controller controller = new Controller(mainPanel, connectionManager, user);
         });
-
     }
 }
