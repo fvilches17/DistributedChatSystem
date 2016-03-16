@@ -11,4 +11,11 @@ public class LogInMessage extends Message {
         super(user);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "Logged in = true";
+    }
+    
+    
+
 }
