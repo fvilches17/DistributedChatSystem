@@ -41,7 +41,7 @@ public class GraphicalInterface extends JFrame {
         getContentPane().add(jsp);
         pack();
         setVisible(true);
-        setSize(userScreenDimension);
+        setSize(600, 600);
         //setIconImage(LOGO);
         setLocationRelativeTo(null);
         addWindowListener(new WindowCloseEvent(user, commsManager));

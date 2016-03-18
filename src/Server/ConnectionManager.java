@@ -115,7 +115,10 @@ public class ConnectionManager implements Runnable {
                             broadCastMessage(clientMessage);
                         } else if (clientMessage instanceof LogOutMessage) {
                              System.out.println("Log out message received");
-                            if (ChatServer.getConnectedClientsTable().contains(client)) {
+                             for(String key : ChatServer.getConnectedClientsTable().keySet()){
+                                 System.out.println("key " + key);
+                             }
+                            if (ChatServer.getConnectedClientsTable().containsKey(client)) {
                                 Socket socket = ChatServer.getConnectedClientsTable().get(client);
                                 System.out.println("socket for client " + clientMessage.getUSER().getID() + " was closed");
                                 socket.close();
@@ -150,5 +153,15 @@ public class ConnectionManager implements Runnable {
             System.err.println("Error closing connection ");
             System.err.println(ex);
         }
+    }
+    //--------------------------------------------------------------------------
+    private String getKey(String name) {
+        for (String key : ChatServer.getConnectedClientsTable().keySet()) {
+            System.out.println("key = " + key);
+            if (ChatServer.getConnectedClientsTable().get(key).equals(name)) {
+                return key;
+            }
+        }
+        return null;
     }
 }
