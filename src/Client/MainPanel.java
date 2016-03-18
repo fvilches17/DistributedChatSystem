@@ -77,7 +77,7 @@ public class MainPanel extends JPanel {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(800, 600);
+        frame.setSize(500, 500);
         frame.setLocationRelativeTo(null);
         frame.getContentPane().add(gui);
     }

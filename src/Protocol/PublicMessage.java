@@ -3,7 +3,10 @@ package Protocol;
 import Client.User;
 import java.net.UnknownHostException;
 
-
+/**
+ * 
+ * @author Francisco Vilches | Saif Asad
+ */
 public class PublicMessage extends Message {
     
     private final String BODY;

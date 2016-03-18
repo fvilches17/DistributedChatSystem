@@ -86,8 +86,10 @@ public final class Controller {
         
         //Transmitting this typed message to the server as well. Server to forward message
         if (recipient.equals("Public")) {
+            System.out.println("sending public message");
             message = new PublicMessage(messageTo, USER);
         } else {
+            System.out.println("sending private message");
             message = new PrivateMessage(messageTo, recipient, USER);
         }
         try {
