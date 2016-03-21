@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.net.UnknownHostException;
 
 /**
- * Represents the currently logged in user
- * @author Francisco
+ * Represents a user logged in to the chat. This object is serializable
+ * @author Francisco Vilches | Saif Asad
  */
 public class User implements Serializable {
-    private final String ID;
+    private final String ID; //userID
     
     public User(String ID) {
         this.ID = ID;

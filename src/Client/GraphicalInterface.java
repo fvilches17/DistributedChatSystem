@@ -3,72 +3,90 @@
 package Client;
 
 import Protocol.LogOutMessage;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.net.URL;
 import java.net.UnknownHostException;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
-
+/**
+ * This object represents the chat graphical user interface
+ * @author Francisco Vilches | Saif Asad
+ */
 public class GraphicalInterface extends JFrame {
-    //FIELDS--------------------------------------------------------------------
-    //TODO add logos
-    //private final URL LOGO_URL = Main.class.getResource("images/Logo.png");
-    //private final Image LOGO = new ImageIcon(LOGO_URL).getImage();
-    private final MainPanel MAIN_PANEL;
-
-    //CONSTRUCTOR---------------------------------------------------------------
-    public GraphicalInterface(MainPanel mainPanel, User user, ConnectionManager commsManager) {
-        MAIN_PANEL = mainPanel;
+    //Fields
+    private final URL LOGO_URL = Main.class.getResource("ImageLibrary/Logo.png");
+    private final Image LOGO = new ImageIcon(LOGO_URL).getImage();
+    
+    //--------------------------------------------------------------------------
+    /**
+     * Constructor
+     * @param mainPanel
+     * @param user
+     * @param connManager 
+     */
+    public GraphicalInterface(MainPanel mainPanel, User user, ClientConnectionManager connManager) {
         
         //Defining screen dimension
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Insets screen = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
         int taskBarHeight = screen.bottom;
-        Dimension userScreenDimension = new Dimension(toolkit.getScreenSize().width,
-                toolkit.getScreenSize().height - taskBarHeight);
-        
+        Dimension interfaceDimension = new Dimension(toolkit.getScreenSize().width/3 + 200,
+                (toolkit.getScreenSize().height - taskBarHeight)/2 + 200);
         
         //Loading frame settings
-        setTitle("Distributed Chat System");
+        setTitle("Distributed Chat System - Logged in as..." + user.getID());
         setName("Distributed Chat System");
+        setIconImage(LOGO);
+        setSize(interfaceDimension);
+        int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+        int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
+        JScrollPane jsp = new JScrollPane(mainPanel.getUSERS_PANEL(), v, h);
+        add(jsp, BorderLayout.WEST);
         getContentPane().add(mainPanel);
-        JScrollPane jsp = new JScrollPane(mainPanel);
-        getContentPane().add(jsp);
-        pack();
         setVisible(true);
-        setSize(userScreenDimension);
-        //setIconImage(LOGO);
+        setResizable(false);
         setLocationRelativeTo(null);
-        addWindowListener(new WindowCloseEvent(user, commsManager));
-        
+        addWindowListener(new WindowCloseEvent(user, connManager));
     }
     
-    //LISTENERS-----------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Inner class which implements WindowListener. When added to the JFrame 
+     * (i.e this class) it acts as a default close operation. It's main purpose
+     * is to send a LogOutMessage to the chat server in the event of the Client
+     * closing the Graphical User Interface.
+     */
     private class WindowCloseEvent implements WindowListener {
         
         private final User USER;
-        private final ConnectionManager COMMS_MANAGER;
+        private final ClientConnectionManager CONN_MNGR;
 
-        public WindowCloseEvent(User user, ConnectionManager commsManager) {
+        public WindowCloseEvent(User user, ClientConnectionManager commsManager) {
             this.USER = user;
-            this.COMMS_MANAGER = commsManager;
+            this.CONN_MNGR = commsManager;
         }
         
         @Override
         public void windowClosing(WindowEvent e) {
             LogOutMessage logoutMessage = new LogOutMessage(USER);
             try {
-                COMMS_MANAGER.sendMessage(logoutMessage);
+                CONN_MNGR.sendMessage(logoutMessage);
+                System.out.println("User logged out!");
             } catch (IOException ex) {
                 System.err.println("Unable to send logout message");
                 System.err.println(ex);
             }
-            COMMS_MANAGER.closeConnection();
+            CONN_MNGR.closeConnection();
             System.out.println("Terminating program");
             System.exit(-1);
         }
@@ -95,7 +113,7 @@ public class GraphicalInterface extends JFrame {
      */
     public static void main(String[] args) throws UnknownHostException {
         //Starting connection
-        ConnectionManager commsManager = new ConnectionManager();
+        ClientConnectionManager commsManager = new ClientConnectionManager();
         
         //User logging in
         User user = new User("fvilches17");
@@ -105,7 +123,6 @@ public class GraphicalInterface extends JFrame {
         MessageDeliveryPanel mdp = new MessageDeliveryPanel();
         UsersPanel up = new UsersPanel();
         MainPanel mainPanel = new MainPanel(up, mdp, tap);
-        
         
         //Starting GUI
         GraphicalInterface gui = new GraphicalInterface(mainPanel, user, commsManager);

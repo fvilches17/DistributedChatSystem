@@ -12,22 +12,38 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
 
-
+/**
+ * This object represents the Text Area where the conversations between the client
+ * and other users is displayed
+ * 
+ * @author Francisco Vilches | Saif Assad
+ */
 public class TextAreaPanel extends JPanel {
     private final TextArea PUBLIC_TEXT_AREA = TextAreaPanel.generateTextArea();
     
-    //CONSTRUCTOR---------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Constructor
+     */
     public TextAreaPanel() {
         setLayout(new BorderLayout());
+        setAutoscrolls(true);
         add(PUBLIC_TEXT_AREA, BorderLayout.CENTER);
     }
     
-    //GETTERS-------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     public TextArea getPUBLIC_TEXT_AREA() {
         return PUBLIC_TEXT_AREA;
     }
     
-    //METHODS-------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    /**
+     * Takes in a TextArea object which represents a conversation between client/user.
+     * It then removes the currently displayed conversation, and replaces it with
+     * this TextArea(conversation).
+     * 
+     * @param conversation a TextArea object
+     */
     public void switchConversation(TextArea conversation) {
         if (this.getComponentCount() == 0) {
             add(conversation);
@@ -39,6 +55,10 @@ public class TextAreaPanel extends JPanel {
         }
     }
     
+    /**
+     * @return a newly created TextArea object which can be used to display a 
+     * client/user conversation.
+     */
     public static TextArea generateTextArea() {
         //Loading TextArea
         TextArea textArea = new TextArea();
