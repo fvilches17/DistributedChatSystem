@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class ClientConnectionManager {
     //Fields
-    private final String HOST_NAME = "localhost";
+    private final String HOST_NAME;
     private final int HOST_TCP_PORT = 8080; 
     private boolean transmitionLive;
     private Socket socket;
@@ -34,8 +34,10 @@ public class ClientConnectionManager {
      * 
      * This default constructor establishes a connection with the chat server
      * and creates object and input streams which are kept as fields of the class
+     * @param hostName an ipAddress(e.g. 176.22.5.22) or host name (e.g. localhost)
      */
-    public ClientConnectionManager() {
+    public ClientConnectionManager(String hostName) {
+        HOST_NAME = hostName;
         try {
             //Starting connection
             socket = new Socket(HOST_NAME, HOST_TCP_PORT);
@@ -154,6 +156,6 @@ public class ClientConnectionManager {
      * @param args
      */
     public static void main(String[] args) {
-        ClientConnectionManager cm = new ClientConnectionManager();
+        ClientConnectionManager cm = new ClientConnectionManager("localhost");
     }
 }

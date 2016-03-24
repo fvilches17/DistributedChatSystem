@@ -33,8 +33,6 @@ public class ChatServer {
     public static final String HOST_NAME = "localhost";
     public static final int TCP_PORT = 8080;
     public static final int UDP_PORT = 8082;
-    public static final int FRANK_UDP_PORT = 8081; //TODO remove
-    public static final int SAIF_UDP_PORT = 5555; //TODO remove
     DatagramSocket tableTransmittingSocket = null;
     ServerSocket serverSocket = null;
     InetAddress hostAddress = null; 
@@ -151,7 +149,6 @@ public class ChatServer {
         private void broadcastClientsTable() {
             //check if there are any clients connected to the server
             InetAddress destAddress = null;
-       
             if (!connectedClientStreams.isEmpty()) {
                 for (String loggedInClient : connectedClientStreams.keySet()) {
                     for (String recipient : connectedClientStreams.keySet()) {
@@ -159,17 +156,9 @@ public class ChatServer {
                             try {
                                 destAddress = connectedClientsSockets.get(recipient).getInetAddress();
                                 byte[] outgoingData = loggedInClient.getBytes();
-                                DatagramPacket frankPacket = new DatagramPacket(outgoingData, outgoingData.length, destAddress, FRANK_UDP_PORT);
-                                DatagramPacket saifPacket = new DatagramPacket(outgoingData, outgoingData.length, destAddress, SAIF_UDP_PORT);
-                                DatagramPacket outPacket = new DatagramPacket(outgoingData, outgoingData.length, destAddress, UDP_PORT);
-
-                                if (recipient.equalsIgnoreCase("Frank")) {
-                                    tableTransmittingSocket.send(frankPacket);
-                                } else if (recipient.equalsIgnoreCase("Saif")) {
-                                    tableTransmittingSocket.send(saifPacket);
-                                } else {
-                                    tableTransmittingSocket.send(outPacket);
-                                }
+                                DatagramPacket outPacket = new DatagramPacket(outgoingData, 
+                                        outgoingData.length, destAddress, UDP_PORT);
+                                tableTransmittingSocket.send(outPacket);
                             } catch (IOException ex) {
                                 Logger.getLogger(ChatServer.class.getName()).log(Level.SEVERE, null, ex);
                             }

@@ -11,10 +11,14 @@ import javax.swing.SwingUtilities;
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            //Obtaining server ipAddress or name
+            String hostName = JOptionPane.showInputDialog("Enter server IP address");
+            if (hostName == null || hostName.isEmpty())
+                System.exit(0);
             
             //Starting connection. If connection fails, message displays and system terminates*
             //*See ClientConnectionManager default contructor
-            ClientConnectionManager clientConnManager = new ClientConnectionManager();
+            ClientConnectionManager clientConnManager = new ClientConnectionManager(hostName);
             
             //User trying to logging in
             User user = null;
@@ -23,13 +27,13 @@ public class Main {
                 //Getting user (i.e. client) id 
                 String userID = JOptionPane.showInputDialog("Enter User ID");
                 if (userID == null) //Means user closed input dialog window 
-                    System.exit(-1);
+                    System.exit(0);
                 //Checking userID format is correct
                 if (userID.length() > 15) {
                     JOptionPane.showMessageDialog(null,"UserID max length is 15");
                     continue;
                 }
-                user = new User(userID);
+                user = new User(userID.toLowerCase()); //setting to lower case to guarantee no duplicates (eg. john John)
                 //Checking with chat server if userID is available
                 isLoggedIn = clientConnManager.checkUserIDAvailability(new LogInMessage(user));
                 if (!isLoggedIn) {

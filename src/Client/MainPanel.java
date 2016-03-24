@@ -93,7 +93,7 @@ public class MainPanel extends JPanel {
      * @param args 
      */
     public static void main(String[] args) {
-        ClientConnectionManager cm = new ClientConnectionManager();
+        ClientConnectionManager cm = new ClientConnectionManager("localhost");
         
         TextAreaPanel tap = new TextAreaPanel();
         MessageDeliveryPanel mdp = new MessageDeliveryPanel();

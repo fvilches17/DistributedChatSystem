@@ -88,7 +88,7 @@ public class GraphicalInterface extends JFrame {
             }
             CONN_MNGR.closeConnection();
             System.out.println("Terminating program");
-            System.exit(-1);
+            System.exit(0);
         }
         
         //Unused
@@ -113,7 +113,7 @@ public class GraphicalInterface extends JFrame {
      */
     public static void main(String[] args) throws UnknownHostException {
         //Starting connection
-        ClientConnectionManager commsManager = new ClientConnectionManager();
+        ClientConnectionManager commsManager = new ClientConnectionManager("localhost");
         
         //User logging in
         User user = new User("fvilches17");

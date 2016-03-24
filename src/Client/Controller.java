@@ -73,6 +73,7 @@ public final class Controller {
         //Adding action listener to public conversation button
         JButton publicUserButton = MAIN_PANEL.getUSERS_PANEL().getPublicButton();
         publicUserButton.addActionListener(new RecipientButtonListener(publicUserButton));
+        
         //Adding public user button and public conversation text area, will be first to appear
         mainPanel.getUSERS_PANEL().addUserIDButton(publicUserButton);
         CONVERSATIONS.put("Public", MAIN_PANEL.getTEXT_AREA_PANEL().getPUBLIC_TEXT_AREA());
@@ -304,18 +305,13 @@ public final class Controller {
     private class BroadCastListener implements Runnable {
 
         private final int BYTE_LIMIT = 1000;
-        private final int SAIF_PORT = 5555; //TODO remove
-        private int PORT = 8081; //TODO, change to 8082
+        private int PORT = 8082;
         private DatagramSocket socket;
 
         private BroadCastListener() {
             try {
                 //Setting up socket where the UDP messages will be comming through
-                if (THIS_CLIENT.getID().equals("Saif")) {
-                    System.out.println("Starting saif port");
-                    this.socket = new DatagramSocket(SAIF_PORT); //TODO Remove this
-                } else
-                    this.socket = new DatagramSocket(PORT);
+                this.socket = new DatagramSocket(PORT);
             } catch (SocketException ex) {
                 //Cannot interact with chat server wihout a socket, therefore terminating prog
                 System.err.println("Unable to start/create Datagram socket");
